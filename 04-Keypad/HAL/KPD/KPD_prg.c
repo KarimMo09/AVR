@@ -24,7 +24,7 @@ void KPD_vInit(void)
 u8   KPD_u8GetPressedKey(void)
 {
 	u8 pressed_key=NOT_PRESSED;
-	u8 num[4][4]={{1,4,7,10},{2,5,8,0},{3,6,9,11},{12,13,14,15}};
+	u8 num[4][4]={{1,4,7,'#'},{2,5,8,0},{3,6,9,'='},{'+','-','*','/'}};
 	for(u8 col=0 ;col<4 ;col++)
 	{
 		/*activate current column*/
