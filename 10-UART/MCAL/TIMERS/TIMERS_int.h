@@ -52,9 +52,9 @@ void MTIMERS_vSetInterval_TIM1_CTC_Asynch(u8 A_u8Channel,u16 A_u16IntervalCounts
 u16 MTIMERS_u16GetElapsedTime(u8 A_u8TimerId);
 u16 MTIMERS_u16GetCapturedValue();
 void MTIMERS_vSetIcuTrigger(ICU_Trigger_t A_xIcuTrigger );
-void MTIMERS_vEnableIntterupts();
-void MTIMERS_DisableIntterupts();
-void MTIMERS_vSetCallback(void (*A_fptr)(void));
+void MTIMERS_vEnableIntterupts(u8 A_u8Interrupt_type);
+void MTIMERS_DisableIntterupts(u8 A_u8Interrupt_type);
+void MTIMERS_vSetCallback(u8 A_u8Interrupt_type,void (*A_fptr)(void));
 
 
 void MTIMERS_vStopTimer(u8 A_u8TimerId);

@@ -2,6 +2,11 @@
 #define STD_TYPES_H
 
 
+#ifndef NULL
+#define NULL      ((void *)0)
+#endif
+
+
 typedef unsigned  char 				        u8;
 typedef signed 	  char 			 	        s8;
 
@@ -15,7 +20,5 @@ typedef signed 	  long long int 	        s64;
 
 typedef float 						        f32;
 typedef double 			                	f64;
-
-
 
 #endif

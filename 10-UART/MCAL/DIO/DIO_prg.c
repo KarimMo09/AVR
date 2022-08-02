@@ -192,3 +192,95 @@ void MDIO_vTogPinVal  ( u8 A_u8PortNo, u8 A_u8PinNo )
 			     break;
 			}
 }
+void MDIO_vSetLowNibble(u8 A_u8Port_name,u8 A_u8Value)
+{
+	A_u8Value&=CLR_HIGH_NIBBLE ;
+	switch(A_u8Port_name)
+	{
+		case DIO_PORTA:
+			DDRA&=CLR_LOW_NIBBLE ;
+			DDRA|=A_u8Value;
+			break;
+		case DIO_PORTB:
+			DDRB&=CLR_LOW_NIBBLE ;
+			DDRB|=A_u8Value;
+			break;
+		case DIO_PORTC:
+			DDRC&=CLR_LOW_NIBBLE ;
+			DDRC|=A_u8Value;
+			break;
+		case DIO_PORTD:
+			DDRD&=CLR_LOW_NIBBLE ;
+			DDRD|=A_u8Value;
+			break;
+	}
+}
+void MDIO_vWriteLowNibble(u8 A_u8Port_name,u8 A_u8Value)
+{
+	A_u8Value&=CLR_HIGH_NIBBLE ;
+	switch(A_u8Port_name)
+	{
+		case DIO_PORTA:
+			PORTA&=CLR_LOW_NIBBLE ;
+			PORTA|=A_u8Value;
+			break;
+		case DIO_PORTB:
+			 PORTB&=CLR_LOW_NIBBLE ;
+		  	 PORTB|=A_u8Value;
+			 break;
+		case DIO_PORTC:
+			 PORTC&=CLR_LOW_NIBBLE ;
+			 PORTC|=A_u8Value;
+			 break;
+		case DIO_PORTD:
+			 PORTD&=CLR_LOW_NIBBLE ;
+			 PORTD|=A_u8Value;
+			 break;
+	}
+}
+void MDIO_vSetHighNibble(u8 A_u8Port_name,u8 A_u8Value)
+{
+	A_u8Value<<=4;
+	switch(A_u8Port_name)
+	{
+		case DIO_PORTA:
+			 DDRA&=CLR_HIGH_NIBBLE;
+			 DDRA|=A_u8Value;
+			 break;
+		case DIO_PORTB:
+			 DDRB&=CLR_HIGH_NIBBLE;
+			 DDRB|=A_u8Value;
+			 break;
+		case DIO_PORTC:
+			 DDRC&=CLR_HIGH_NIBBLE;
+			 DDRC|=A_u8Value;
+			 break;
+		case DIO_PORTD:
+			 DDRD&=CLR_HIGH_NIBBLE;
+			 DDRD|=A_u8Value;
+			 break;
+	}
+}
+void MDIO_vWriteHighNibble(u8 A_u8Port_name,u8 A_u8Value)
+{
+	A_u8Value<<=4;
+	switch(A_u8Port_name)
+	{
+		case DIO_PORTA:
+			 PORTA&=CLR_HIGH_NIBBLE;
+			 PORTA|=A_u8Value;
+			 break;
+		case DIO_PORTB:
+			 PORTB&=CLR_HIGH_NIBBLE;
+		 	 PORTB|=A_u8Value;
+			 break;
+		case DIO_PORTC:
+			 PORTC&=CLR_HIGH_NIBBLE;
+			 PORTC|=A_u8Value;
+		 	 break;
+		case DIO_PORTD:
+			 PORTD&=CLR_HIGH_NIBBLE;
+			 PORTD|=A_u8Value;
+			 break;
+	}
+}

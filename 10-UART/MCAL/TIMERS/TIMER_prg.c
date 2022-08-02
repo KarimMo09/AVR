@@ -432,18 +432,73 @@ void MTIMERS_vSetIcuTrigger(ICU_Trigger_t A_xIcuTrigger )
 	}
 
 }
-void MTIMERS_vEnableIntterupts()
+void MTIMERS_vEnableIntterupts(u8 A_u8Interrupt_type)
 {
-	SET_BIT(TIMSK,TICIE1);
+	switch(A_u8Interrupt_type)
+		{
+		    case TIMER0_OVF :SET_BIT(TIMSK,TOIE0);
+						 break;
+			case TIMER1_OVF :SET_BIT(TIMSK,TOIE1);
+						 break;
+			case TIMER2_OVF:SET_BIT(TIMSK,TOIE2);
+						 break;
+			case TIMER0_CTC:SET_BIT(TIMSK,OCIE0);
+						 break;
+			case TIMER2_CTC:SET_BIT(TIMSK,OCIE2);
+					 	 break;
+			case TIMER1_CTC_CHANNEL_A:SET_BIT(TIMSK,OCIE1A);
+					  	 break;
+			case TIMER1_CTC_CHANNEL_B:SET_BIT(TIMSK,OCIE1B);
+						 break;
+			case TIMER1_ICU:SET_BIT(TIMSK,TICIE1);
+						 break;
+		}
 
 }
-void MTIMERS_DisableIntterupts()
+void MTIMERS_DisableIntterupts(u8 A_u8Interrupt_type)
 {
-	CLR_BIT(TIMSK,TICIE1);
+	switch(A_u8Interrupt_type)
+		{
+		    case TIMER0_OVF :CLR_BIT(TIMSK,TOIE0);
+						 break;
+			case TIMER1_OVF :CLR_BIT(TIMSK,TOIE1);
+						 break;
+			case TIMER2_OVF:CLR_BIT(TIMSK,TOIE2);
+						 break;
+			case TIMER0_CTC:CLR_BIT(TIMSK,OCIE0);
+						 break;
+			case TIMER2_CTC:CLR_BIT(TIMSK,OCIE2);
+					 	 break;
+			case TIMER1_CTC_CHANNEL_A:CLR_BIT(TIMSK,OCIE1A);
+					  	 break;
+			case TIMER1_CTC_CHANNEL_B:CLR_BIT(TIMSK,OCIE1B);
+						 break;
+			case TIMER1_ICU:CLR_BIT(TIMSK,TICIE1);
+						 break;
+		}
 }
-void MTIMERS_vSetCallback(void (*A_fptr)(void))
+void MTIMERS_vSetCallback(u8 A_u8Interrupt_type,void (*A_fptr)(void))
 {
-	GS_fpTIM1_ICU_Callback=A_fptr;
+	switch(A_u8Interrupt_type)
+	{
+	    case TIMER0_OVF :GS_fpTIM0_OVF_Callback=A_fptr;
+					 break;
+		case TIMER1_OVF :GS_fpTIM1_OVF_Callback=A_fptr;
+					 break;
+		case TIMER2_OVF:GS_fpTIM2_OVF_Callback=A_fptr;
+					 break;
+		case TIMER0_CTC:GS_fpTIM0_CTC_Callback=A_fptr;
+					 break;
+		case TIMER2_CTC:GS_fpTIM2_CTC_Callback=A_fptr;
+				 	 break;
+		case TIMER1_CTC_CHANNEL_A:GS_fpTIM1_CTC_A_Callback=A_fptr;
+				  	 break;
+		case TIMER1_CTC_CHANNEL_B:GS_fpTIM1_CTC_B_Callback=A_fptr;
+					 break;
+		case TIMER1_ICU:GS_fpTIM1_ICU_Callback=A_fptr;
+					break;
+
+	}
 
 }
 /*---------------ISR TIMER2 COMP---------------*/

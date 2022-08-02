@@ -4,113 +4,108 @@
  *  Created on: May 19, 2022
  *      Author: Karim
  */
+
+
 #include "../../LIB/STD_TYPES.h"
-#include "../../MCAL/DIO/DIO_int.h"
+
 #include <util/delay.h>
+
+#include "../../MCAL/DIO/DIO_INT.h"
 #include "LCD_int.h"
+#include "LCD_cfg.h"
+#include "LCD_prv.h"
+
+
 
 void HLCD_vInit(void)
 {
-	/*Set you pin direction */
-	DIO_vSetPortDir(LCD_DATA_PORT,PORT_OUTPUT);
-	DIO_vSetPinDir(LCD_CTRL_PORT,LCD_RS_PIN,DIO_OUTPUT);
-	DIO_vSetPinDir(LCD_CTRL_PORT,LCD_RW_PIN,DIO_OUTPUT);
-	DIO_vSetPinDir(LCD_CTRL_PORT,LCD_EN_PIN,DIO_OUTPUT);
-
-	/*Start init sequence */
-	_delay_ms(50);
-	HLCD_vSendCommand(0x38);   //function set 2 lines used &5*7 dot
+	/*------Set  pin direction-----*/
+#if LCD_MODE==EIGHT_BITS
+	MDIO_vSetPortDir(LCD_DATA_PORT,PORT_OUTPUT);
+	MDIO_vSetPinDir(LCD_CTRL_PORT,LCD_RS_PIN,DIO_OUTPUT);
+	MDIO_vSetPinDir(LCD_CTRL_PORT,LCD_RW_PIN,DIO_OUTPUT);
+	MDIO_vSetPinDir(LCD_CTRL_PORT,LCD_EN_PIN,DIO_OUTPUT);
+	/*-----Start init sequence-----*/
+	HLCD_vSendCommand(EIGHT_BITS);
 	_delay_ms(1);
-	HLCD_vSendCommand(0x0E);   //Display on cursor off blinkink off
+#elif LCD_MODE==FOUR_BITS
+	    MDIO_vSetLowNibble(LCD_DATA_PORT,PORT_OUTPUT);
+		MDIO_vSetPinDir(LCD_CTRL_PORT,LCD_RS_PIN,DIO_OUTPUT);
+		MDIO_vSetPinDir(LCD_CTRL_PORT,LCD_RW_PIN,DIO_OUTPUT);
+		MDIO_vSetPinDir(LCD_CTRL_PORT,LCD_EN_PIN,DIO_OUTPUT);
+		HLCD_vSendCommand(FOUR_BITS);
+		_delay_ms(1);
+#endif
+	HLCD_vSendCommand(CURSOR_ON_DISPLAN_ON);
 	_delay_ms(1);
-	HLCD_vSendCommand(CLR_SCREEN);   //clear display
+	HLCD_vSendCommand(CLR_SCREEN);
 	_delay_ms(3);
-	HLCD_vSendCommand(0x06);   //entry mode
+	HLCD_vSendCommand(ENTRY_MODE);
 	_delay_ms(1);
-	/* end initialization */
+	// end initialization
 }
-
+void HLCD_vFallingEdge(void)
+{
+	MDIO_vSetPinVal(LCD_CTRL_PORT, LCD_EN_PIN, DIO_HIGH); // EN pulse sequence
+	_delay_ms(1);
+	MDIO_vSetPinVal(LCD_CTRL_PORT, LCD_EN_PIN, DIO_LOW); // EN pulse sequence
+	_delay_ms(1);
+}
+void HLCD_vSendCommand(u8 A_u8Command)
+{
+	MDIO_vSetPinVal(LCD_CTRL_PORT, LCD_RS_PIN, DIO_LOW); // RS->LOW
+	MDIO_vSetPinVal(LCD_CTRL_PORT, LCD_RW_PIN, DIO_LOW); // RW-> LOW
+	MDIO_vSetPortVal(LCD_DATA_PORT, A_u8Command);
+	HLCD_vFallingEdge();
+}
 void HLCD_vClrScreen(void)
 {
 	HLCD_vSendCommand(CLR_SCREEN);
 }
-void HLCD_vSendCommand(u8 A_u8Cmd)
-{
-	/*Control RS and RW Pins*/
-	
-	DIO_vSetPinVal(LCD_CTRL_PORT,LCD_RS_PIN,DIO_LOW);
-	DIO_vSetPinVal(LCD_CTRL_PORT,LCD_RW_PIN,DIO_LOW);
-	
-	/* Write Command on the data Pins */
-	DIO_vSetPortVal(LCD_DATA_PORT,A_u8Cmd);
-	
-	/* Pulse on the enable pin */
-	DIO_vSetPinVal(LCD_CTRL_PORT,LCD_EN_PIN,DIO_HIGH);
-	_delay_ms(1);
-	DIO_vSetPinVal(LCD_CTRL_PORT,LCD_EN_PIN,DIO_LOW);
-	_delay_ms(1);
-}
-
 void HLCD_vSendChar(u8 A_u8Char)
 {
-	/*Control RS and RW Pins*/
-
-	DIO_vSetPinVal(LCD_CTRL_PORT,LCD_RS_PIN,DIO_HIGH);
-	DIO_vSetPinVal(LCD_CTRL_PORT,LCD_RW_PIN,DIO_LOW);
-	
-	/* Write Data on the data Pins */
-	DIO_vSetPortVal(LCD_DATA_PORT,A_u8Char);
-	
-	/* Pulse on the enable pin */
-	DIO_vSetPinVal(LCD_CTRL_PORT,LCD_EN_PIN,DIO_HIGH);
-	_delay_ms(1);
-	DIO_vSetPinVal(LCD_CTRL_PORT,LCD_EN_PIN,DIO_LOW);
-	_delay_ms(1);
+	MDIO_vSetPinVal(LCD_CTRL_PORT, LCD_RS_PIN, DIO_HIGH); // RS->HIGH
+	MDIO_vSetPinVal(LCD_CTRL_PORT, LCD_RW_PIN, DIO_LOW); // RW-> LOW
+	MDIO_vSetPortVal(LCD_DATA_PORT, A_u8Char);
+	HLCD_vFallingEdge();
 }
 
-void HLCD_vPrintString(char A_s8String[] )
+void HLCD_vPrintString(char *A_pu8String )
 {
-	static u8 L_su8Row=ROW_ONE;
-	u8 flag=0;
-	for(u8 L_u8Char=0;A_s8String[L_u8Char] !='\0';L_u8Char++)
+
+	/*HLCD_vClrScreen();
+	static u8 LS_u8Colm=0;*/
+	while(*A_pu8String!='\0')
 	{
-		HLCD_vSendChar(A_s8String[L_u8Char]);
-		_delay_ms(200);
-		if(L_u8Char==COLUMN16 && L_su8Row==ROW_ONE)
-		{
-			HLCD_vSetCursorPosition(ROW_ONE ,COLUMN17);
-			HLCD_vSendCommand(SHIFT_SCREEN_LEFT);
-			L_su8Row=ROW_TWO;
-			flag=1;
-		}
-		/*else if(A_s8String[L_u8Char] =='\0' && L_su8Row==ROW_ONE)
-			L_su8Row=ROW_TWO;
-*/
-		else if(L_u8Char==COLUMN16 && L_su8Row==ROW_TWO)
-		{
-			HLCD_vSetCursorPosition(ROW_TWO ,COLUMN17);
-			HLCD_vSendCommand(SHIFT_SCREEN_LEFT);
-			L_su8Row=ROW_ONE;
-			flag=1;
-		}
-		/*else if(A_s8String[L_u8Char] =='\0' && L_su8Row==ROW_TWO)
-			L_su8Row=ROW_ONE;*/
+		/*LS_u8Colm++;
+		if(G_u8Colm==17)
+			{
+			  	HLCD_vSetCursorPosition(LCD_LINE1,COLUMN1);
+		    }
+		else if(LS_u8Colm==33)
+			{
+				HLCD_vClrScreen();
+				HLCD_vSetCursorPosition(LCD_LINE0,COLUMN1);
+			}*/
+		HLCD_vSendChar(*A_pu8String);
+		A_pu8String++;
 	}
-	if(L_su8Row==ROW_ONE && flag==0)
-		L_su8Row=ROW_TWO;
-	else if (L_su8Row==ROW_TWO && flag==0)
-		L_su8Row=ROW_ONE;
-	_delay_ms(1000);
-	HLCD_vSendCommand(RETURN_HOME);
-	HLCD_vSendCommand(ENTRY_MODE);
-
-
-
+}
+void HLCD_vSetCursorPosition(u8 A_u8LineNo ,u8 A_u8LColumn)
+{
+	if(A_u8LineNo==LCD_LINE1)
+	{
+		HLCD_vSendCommand(INIT_CURSOR_POS+ROW_TWO+A_u8LColumn);
+	}
+	else
+	{
+		HLCD_vSendCommand(INIT_CURSOR_POS+ROW_ONE+A_u8LColumn);
+	}
 
 }
 void HLCD_vPrintNumber(s32 A_s32Number )
 {
-	u8 L_u8DigitNum[25];
+	u8 L_u8DigitNum[10]={0};
 	s8 L_s8Digit=0;
 	if(A_s32Number<0)
 	{
@@ -119,7 +114,7 @@ void HLCD_vPrintNumber(s32 A_s32Number )
 	}
 	else if(A_s32Number==0)
 	{
-		HLCD_vSendChar(0+48);
+		HLCD_vSendChar('0');
 	}
 	while(A_s32Number)
 		{
@@ -129,27 +124,27 @@ void HLCD_vPrintNumber(s32 A_s32Number )
 		}
 	for(L_s8Digit-=1 ; L_s8Digit>=0 ; L_s8Digit--)
 	{
-		HLCD_vSendChar(L_u8DigitNum[L_s8Digit]+48);
+		HLCD_vSendChar(L_u8DigitNum[L_s8Digit]+'0');
 	}
 
 }
-void HLCD_vSetCursorPosition(u8 A_u8LinePos ,u8 A_u8LineNo)
+void HLCD_vSaveCustomChar(u8 A_u8CgramIndex,u8 A_u8CustomCharData[] )
 {
-	if(A_u8LinePos==ROW_TWO)
+	/* 1-Set CGRAM Address */
+	HLCD_vSendCommand(0b01000000 + (A_u8CgramIndex *8));
+	/* 2- send custom char data */
+	for(u8 L_u8Idx=0; L_u8Idx <8; L_u8Idx++)
 	{
-		HLCD_vSendCommand(INIT_CURSOR_POS+ROW_TWO+A_u8LineNo);
+		HLCD_vSendChar(A_u8CustomCharData[L_u8Idx]);
 	}
-	else
+	/* 3-Set DDRAM Address */
+	HLCD_vSendCommand(0x80);
+}
+void HLCD_vDisplayCustomChar(u8 A_u8CgramIndex)
+{
+	if(A_u8CgramIndex < 8)
 	{
-		HLCD_vSendCommand(INIT_CURSOR_POS+ROW_ONE+A_u8LineNo);
+		HLCD_vSendChar(A_u8CgramIndex);
 	}
-
 }
-void HLCD_vSaveCustomChar(/*TODO:inputs arguments to be provided */)
-{
 
-}
-void HLCD_vDisplayCustomChar(/*TODO:to be done */)
-{
-
-}

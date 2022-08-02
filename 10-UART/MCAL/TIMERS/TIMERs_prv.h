@@ -13,6 +13,16 @@
 #define    	ENABLE	    	 	 2
 #define     CLR_CS_BITS          0xF8
 #define     TIMERS_INTERRUPTS	 8
+/*----------Interrupt type------------*/
+#define    	TIMER0_OVF   	 	  0
+#define    	TIMER1_OVF   	 	  1
+#define    	TIMER2_OVF   	 	  2
+#define    	TIMER0_CTC    		  3
+#define    	TIMER2_CTC    		  4
+#define    	TIMER1_CTC_CHANNEL_A  5
+#define    	TIMER1_CTC_CHANNEL_B  6
+#define    	TIMER1_ICU			  7
+
 
 /*------------Timers  mode------------*/
 #define    	TIMER_OVF   	 	  1

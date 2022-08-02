@@ -10,6 +10,8 @@
 #include "../../LIB/Bit_math.h"
 #include <util/delay.h>
 
+#include "../../MCAL/DIO/DIO_INT.h"
+
 
 #include "KPD_int.h"
 
@@ -17,8 +19,8 @@
 
 void KPD_vInit(void)
 {
-	DIO_vSetPortDir(KPD_PORT, KPD_PORT_Dir);
-	DIO_vSetPortVal(KPD_PORT, PORT_OUTPUT);
+	MDIO_vSetPortDir(KPD_PORT, KPD_PORT_Dir);
+	MDIO_vSetPortVal(KPD_PORT, PORT_OUTPUT);
 }
 
 u8   KPD_u8GetPressedKey(void)
@@ -28,18 +30,18 @@ u8   KPD_u8GetPressedKey(void)
 	for(u8 col=0 ;col<4 ;col++)
 	{
 		/*activate current column*/
-			DIO_vSetPinVal(KPD_PORT,col,DIO_LOW);
+			MDIO_vSetPinVal(KPD_PORT,col,DIO_LOW);
 			for(u8 row=0 ;row<4 ;row++)
 			{
-				if(DIO_u8GetPinVal(KPD_PORT,row+4)==0)
+				if(MDIO_u8GetPinVal(KPD_PORT,row+4)==0)
 				{
 					pressed_key= num[row][col];/*key number*/
 				}
-				while(DIO_u8GetPinVal(KPD_PORT,row+4)==0);
+				while(MDIO_u8GetPinVal(KPD_PORT,row+4)==0);
 				_delay_ms(10);
 			}
 			/*deactivate column*/
-			DIO_vSetPinVal(KPD_PORT,col,DIO_HIGH);
+			MDIO_vSetPinVal(KPD_PORT,col,DIO_HIGH);
 		}
 		return pressed_key;
 }

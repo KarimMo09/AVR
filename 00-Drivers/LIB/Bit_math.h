@@ -1,11 +1,3 @@
-
-/*
- * Bit_math.h
- *
- * Created: 2/17/2021 3:37:09 PM
- *  Author: Karim
- */
- 
 #ifndef BIT_MATH_H
 #define BIT_MATH_H
 
