@@ -55,10 +55,7 @@
 #define     ASYNCHRONOUS_MODE	 0
 #define     SYNCHRONOUS_MODE	 1
 
-/*-----------Interrupt types----------*/
-#define     RX_COPMLETE     	 0
-#define 	TX_COPMLETE     	 1
-#define 	UDR_EMPTY 		     2
+
 
 #define     EVEN_PARITY      	 1
 #define     ODD_PARITY	 		 2

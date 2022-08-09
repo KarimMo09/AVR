@@ -28,10 +28,11 @@ void HLCD_vInit(void)
 	HLCD_vSendCommand(EIGHT_BITS);
 	_delay_ms(1);
 #elif LCD_MODE==FOUR_BITS
-	    MDIO_vSetLowNibble(LCD_DATA_PORT,PORT_OUTPUT);
+	    MDIO_vSetHighNibble(LCD_DATA_PORT,0x0f);
 		MDIO_vSetPinDir(LCD_CTRL_PORT,LCD_RS_PIN,DIO_OUTPUT);
 		MDIO_vSetPinDir(LCD_CTRL_PORT,LCD_RW_PIN,DIO_OUTPUT);
 		MDIO_vSetPinDir(LCD_CTRL_PORT,LCD_EN_PIN,DIO_OUTPUT);
+		MDIO_vSetPinVal(LCD_CTRL_PORT,LCD_RW_PIN,0);
 		HLCD_vSendCommand(FOUR_BITS);
 		_delay_ms(1);
 #endif
@@ -54,8 +55,18 @@ void HLCD_vSendCommand(u8 A_u8Command)
 {
 	MDIO_vSetPinVal(LCD_CTRL_PORT, LCD_RS_PIN, DIO_LOW); // RS->LOW
 	MDIO_vSetPinVal(LCD_CTRL_PORT, LCD_RW_PIN, DIO_LOW); // RW-> LOW
+#if LCD_MODE==EIGHT_BITS
 	MDIO_vSetPortVal(LCD_DATA_PORT, A_u8Command);
 	HLCD_vFallingEdge();
+#elif LCD_MODE==FOUR_BITS
+	MDIO_vWriteHighNibble(LCD_DATA_PORT,A_u8Command>>4);
+	MDIO_vSetPinVal(LCD_CTRL_PORT, LCD_RS_PIN, DIO_LOW); // RS->LOW
+	HLCD_vFallingEdge();
+	MDIO_vWriteHighNibble(LCD_DATA_PORT,A_u8Command);
+	MDIO_vSetPinVal(LCD_CTRL_PORT, LCD_RS_PIN, DIO_LOW); // RS->LOW
+	HLCD_vFallingEdge();
+	_delay_ms(1);
+#endif
 }
 void HLCD_vClrScreen(void)
 {
@@ -63,10 +74,34 @@ void HLCD_vClrScreen(void)
 }
 void HLCD_vSendChar(u8 A_u8Char)
 {
-	MDIO_vSetPinVal(LCD_CTRL_PORT, LCD_RS_PIN, DIO_HIGH); // RS->HIGH
-	MDIO_vSetPinVal(LCD_CTRL_PORT, LCD_RW_PIN, DIO_LOW); // RW-> LOW
-	MDIO_vSetPortVal(LCD_DATA_PORT, A_u8Char);
-	HLCD_vFallingEdge();
+
+#if LCD_MODE==EIGHT_BITS
+	if(A_u8Char==DEL)
+	{
+		HLCD_vSendCommand(SHIFT_CURSOR_LEFT);
+		MDIO_vSetPinVal(LCD_CTRL_PORT, LCD_RS_PIN, DIO_HIGH); // RS->HIGH
+		MDIO_vSetPinVal(LCD_CTRL_PORT, LCD_RW_PIN, DIO_LOW); // RW-> LOW
+		MDIO_vSetPortVal(LCD_DATA_PORT, A_u8Char);
+		HLCD_vFallingEdge();
+		HLCD_vSendCommand(SHIFT_CURSOR_LEFT);
+	}
+	else
+	{
+		MDIO_vSetPinVal(LCD_CTRL_PORT, LCD_RS_PIN, DIO_HIGH); // RS->HIGH
+		MDIO_vSetPinVal(LCD_CTRL_PORT, LCD_RW_PIN, DIO_LOW); // RW-> LOW
+		MDIO_vSetPortVal(LCD_DATA_PORT, A_u8Char);
+		HLCD_vFallingEdge();
+	}
+
+
+#elif LCD_MODE==FOUR_BITS
+	MDIO_vWriteHighNibble(LCD_DATA_PORT,A_u8Char>>4);
+	MDIO_vSetPinVal(LCD_CTRL_PORT, LCD_RS_PIN, DIO_HIGH); // RS->LOW
+		HLCD_vFallingEdge();
+		MDIO_vWriteHighNibble(LCD_DATA_PORT,A_u8Char);
+		MDIO_vSetPinVal(LCD_CTRL_PORT, LCD_RS_PIN, DIO_HIGH); // RS->LOW
+		HLCD_vFallingEdge();
+#endif
 }
 
 void HLCD_vPrintString(char *A_pu8String )
@@ -89,6 +124,14 @@ void HLCD_vPrintString(char *A_pu8String )
 		HLCD_vSendChar(*A_pu8String);
 		A_pu8String++;
 	}
+}
+void HLCD_vShiftCursor_Left(void)
+{
+	HLCD_vSendCommand(SHIFT_CURSOR_LEFT);
+}
+void HLCD_vShiftCursor_Right(void)
+{
+	HLCD_vSendCommand(SHIFT_CURSOR_RIGHT);
 }
 void HLCD_vSetCursorPosition(u8 A_u8LineNo ,u8 A_u8LColumn)
 {

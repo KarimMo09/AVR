@@ -1,15 +1,28 @@
 Archive member included because of file (symbol)
 
 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_divmodsi4.o)
-                              ./HAL/LCD/LCD_prg.o (__divmodsi4)
+                              ./MCAL/UART/UART_prg.o (__divmodsi4)
 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
                               c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm32.o (exit)
 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_copy_data.o)
-                              ./HAL/SSD/SSD_prg.o (__do_copy_data)
+                              ./MCAL/ADC/ADC_prg.o (__do_copy_data)
 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
-                              ./HAL/LCD/LCD_prg.o (__do_clear_bss)
+                              ./MCAL/UART/UART_prg.o (__do_clear_bss)
 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_udivmodsi4.o)
                               c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_divmodsi4.o) (__udivmodsi4)
+
+Allocating common symbols
+Common symbol       size              file
+
+G_u32IntervalCountTIM1B
+                    0x4               ./MCAL/TIMERS/TIMER_prg.o
+G_u32IntervalCountTIM2
+                    0x4               ./MCAL/TIMERS/TIMER_prg.o
+G_u32IntervalCountTIM0
+                    0x4               ./MCAL/TIMERS/TIMER_prg.o
+G_fpADC_Callback    0x2               ./MCAL/ADC/ADC_prg.o
+G_u32IntervalCountTIM1A
+                    0x4               ./MCAL/TIMERS/TIMER_prg.o
 
 Memory Configuration
 
@@ -25,7 +38,13 @@ signature        0x00840000         0x00000400         rw !x
 Linker script and memory map
 
 LOAD c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm32.o
+LOAD ./MCAL/WDT/WDT_prg.o
+LOAD ./MCAL/UART/UART_prg.o
+LOAD ./MCAL/TIMERS/TIMER_prg.o
+LOAD ./MCAL/GIE/GIE_prg.o
+LOAD ./MCAL/EXTI/EXTI_prg.o
 LOAD ./MCAL/DIO/DIO_prg.o
+LOAD ./MCAL/ADC/ADC_prg.o
 LOAD ./HAL/SSD/SSD_prg.o
 LOAD ./HAL/LCD/LCD_prg.o
 LOAD ./HAL/KPD/KPD_prg.o
@@ -124,7 +143,7 @@ LOAD c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x7d2
+.text           0x00000000     0x14c2
  *(.vectors)
  .vectors       0x00000000       0x54 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm32.o
                 0x00000000                __vectors
@@ -183,25 +202,19 @@ LOAD c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
                 0x0000008e                __vector_1
                 0x0000008e                __vector_12
                 0x0000008e                __bad_interrupt
-                0x0000008e                __vector_6
                 0x0000008e                __vector_3
-                0x0000008e                __vector_11
-                0x0000008e                __vector_13
                 0x0000008e                __vector_17
                 0x0000008e                __vector_19
-                0x0000008e                __vector_7
-                0x0000008e                __vector_5
-                0x0000008e                __vector_4
-                0x0000008e                __vector_9
                 0x0000008e                __vector_2
-                0x0000008e                __vector_15
-                0x0000008e                __vector_8
-                0x0000008e                __vector_14
-                0x0000008e                __vector_10
-                0x0000008e                __vector_16
                 0x0000008e                __vector_18
                 0x0000008e                __vector_20
+ .text          0x00000092        0x0 ./MCAL/WDT/WDT_prg.o
+ .text          0x00000092        0x0 ./MCAL/UART/UART_prg.o
+ .text          0x00000092        0x0 ./MCAL/TIMERS/TIMER_prg.o
+ .text          0x00000092        0x0 ./MCAL/GIE/GIE_prg.o
+ .text          0x00000092        0x0 ./MCAL/EXTI/EXTI_prg.o
  .text          0x00000092        0x0 ./MCAL/DIO/DIO_prg.o
+ .text          0x00000092        0x0 ./MCAL/ADC/ADC_prg.o
  .text          0x00000092        0x0 ./HAL/SSD/SSD_prg.o
  .text          0x00000092        0x0 ./HAL/LCD/LCD_prg.o
  .text          0x00000092        0x0 ./HAL/KPD/KPD_prg.o
@@ -213,80 +226,242 @@ LOAD c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
  .text          0x00000092        0x0 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_udivmodsi4.o)
                 0x00000092                . = ALIGN (0x2)
  *(.text.*)
- .text.DIO_vSetPinDir
-                0x00000092       0xe6 ./MCAL/DIO/DIO_prg.o
-                0x00000092                DIO_vSetPinDir
- .text.DIO_vSetPinVal
-                0x00000178       0xe6 ./MCAL/DIO/DIO_prg.o
-                0x00000178                DIO_vSetPinVal
- .text.DIO_u8GetPinVal
-                0x0000025e       0x64 ./MCAL/DIO/DIO_prg.o
-                0x0000025e                DIO_u8GetPinVal
- .text.DIO_vSetPortDir
-                0x000002c2       0x22 ./MCAL/DIO/DIO_prg.o
-                0x000002c2                DIO_vSetPortDir
- .text.DIO_vSetPortVal
-                0x000002e4       0x22 ./MCAL/DIO/DIO_prg.o
-                0x000002e4                DIO_vSetPortVal
- .text.DIO_u8GetPortVal
-                0x00000306       0x24 ./MCAL/DIO/DIO_prg.o
-                0x00000306                DIO_u8GetPortVal
+ .text.MWDT_vTrunOn
+                0x00000092       0x10 ./MCAL/WDT/WDT_prg.o
+                0x00000092                MWDT_vTrunOn
+ .text.MWDT_vTrunOff
+                0x000000a2        0xa ./MCAL/WDT/WDT_prg.o
+                0x000000a2                MWDT_vTrunOff
+ .text.MUART_vInit
+                0x000000ac       0x2c ./MCAL/UART/UART_prg.o
+                0x000000ac                MUART_vInit
+ .text.MUART_vTransmmitData
+                0x000000d8        0x8 ./MCAL/UART/UART_prg.o
+                0x000000d8                MUART_vTransmmitData
+ .text.MUART_u16RecieveData
+                0x000000e0        0xa ./MCAL/UART/UART_prg.o
+                0x000000e0                MUART_u16RecieveData
+ .text.MUART_vSendString
+                0x000000ea       0x14 ./MCAL/UART/UART_prg.o
+                0x000000ea                MUART_vSendString
+ .text.MUART_vSendNumber
+                0x000000fe       0xf2 ./MCAL/UART/UART_prg.o
+                0x000000fe                MUART_vSendNumber
+ .text.MUART_vEnableIntterupts
+                0x000001f0       0x1a ./MCAL/UART/UART_prg.o
+                0x000001f0                MUART_vEnableIntterupts
+ .text.MUART_DisableIntterupts
+                0x0000020a       0x1a ./MCAL/UART/UART_prg.o
+                0x0000020a                MUART_DisableIntterupts
+ .text.MUART_vSetCallback
+                0x00000224       0x2c ./MCAL/UART/UART_prg.o
+                0x00000224                MUART_vSetCallback
+ .text.__vector_13
+                0x00000250       0x52 ./MCAL/UART/UART_prg.o
+                0x00000250                __vector_13
+ .text.__vector_15
+                0x000002a2       0x52 ./MCAL/UART/UART_prg.o
+                0x000002a2                __vector_15
+ .text.__vector_14
+                0x000002f4       0x52 ./MCAL/UART/UART_prg.o
+                0x000002f4                __vector_14
+ .text.MTIMERS_vInit
+                0x00000346       0x50 ./MCAL/TIMERS/TIMER_prg.o
+                0x00000346                MTIMERS_vInit
+ .text.MTIMERS_vSetPreLoadVal
+                0x00000396       0x1c ./MCAL/TIMERS/TIMER_prg.o
+                0x00000396                MTIMERS_vSetPreLoadVal
+ .text.MTIMERS_vSetCompareValue
+                0x000003b2       0x12 ./MCAL/TIMERS/TIMER_prg.o
+                0x000003b2                MTIMERS_vSetCompareValue
+ .text.MTIMERS_vSetCompareValueTIM1
+                0x000003c4        0x2 ./MCAL/TIMERS/TIMER_prg.o
+                0x000003c4                MTIMERS_vSetCompareValueTIM1
+ .text.MTIMERS_vStartTimer
+                0x000003c6       0x2c ./MCAL/TIMERS/TIMER_prg.o
+                0x000003c6                MTIMERS_vStartTimer
+ .text.MTIMERS_vSetInterval_TIM1_CTC_Asynch
+                0x000003f2       0x50 ./MCAL/TIMERS/TIMER_prg.o
+                0x000003f2                MTIMERS_vSetInterval_TIM1_CTC_Asynch
+ .text.MTIMERS_vSetInterval_CTC_Asynch
+                0x00000442       0x5e ./MCAL/TIMERS/TIMER_prg.o
+                0x00000442                MTIMERS_vSetInterval_CTC_Asynch
+ .text.MTIMERS_vSetInterval_OVF_Asynch
+                0x000004a0       0x76 ./MCAL/TIMERS/TIMER_prg.o
+                0x000004a0                MTIMERS_vSetInterval_OVF_Asynch
+ .text.MTIMERS_vStopTimer
+                0x00000516       0x1a ./MCAL/TIMERS/TIMER_prg.o
+                0x00000516                MTIMERS_vStopTimer
+ .text.MTIMERS_u16GetElapsedTime
+                0x00000530       0x26 ./MCAL/TIMERS/TIMER_prg.o
+                0x00000530                MTIMERS_u16GetElapsedTime
+ .text.MTIMERS_u16GetCapturedValue
+                0x00000556        0x8 ./MCAL/TIMERS/TIMER_prg.o
+                0x00000556                MTIMERS_u16GetCapturedValue
+ .text.MTIMERS_vSetIcuTrigger
+                0x0000055e       0x1a ./MCAL/TIMERS/TIMER_prg.o
+                0x0000055e                MTIMERS_vSetIcuTrigger
+ .text.MTIMERS_vEnableIntterupts
+                0x00000578       0x58 ./MCAL/TIMERS/TIMER_prg.o
+                0x00000578                MTIMERS_vEnableIntterupts
+ .text.MTIMERS_DisableIntterupts
+                0x000005d0       0x58 ./MCAL/TIMERS/TIMER_prg.o
+                0x000005d0                MTIMERS_DisableIntterupts
+ .text.MTIMERS_vSetCallback
+                0x00000628       0x74 ./MCAL/TIMERS/TIMER_prg.o
+                0x00000628                MTIMERS_vSetCallback
+ .text.__vector_4
+                0x0000069c       0xa2 ./MCAL/TIMERS/TIMER_prg.o
+                0x0000069c                __vector_4
+ .text.__vector_5
+                0x0000073e       0xa2 ./MCAL/TIMERS/TIMER_prg.o
+                0x0000073e                __vector_5
+ .text.__vector_6
+                0x000007e0       0x52 ./MCAL/TIMERS/TIMER_prg.o
+                0x000007e0                __vector_6
+ .text.__vector_7
+                0x00000832       0xa2 ./MCAL/TIMERS/TIMER_prg.o
+                0x00000832                __vector_7
+ .text.__vector_8
+                0x000008d4       0xa2 ./MCAL/TIMERS/TIMER_prg.o
+                0x000008d4                __vector_8
+ .text.__vector_9
+                0x00000976       0xa2 ./MCAL/TIMERS/TIMER_prg.o
+                0x00000976                __vector_9
+ .text.__vector_10
+                0x00000a18       0xa2 ./MCAL/TIMERS/TIMER_prg.o
+                0x00000a18                __vector_10
+ .text.__vector_11
+                0x00000aba       0xa2 ./MCAL/TIMERS/TIMER_prg.o
+                0x00000aba                __vector_11
+ .text.MGIE_vEnableGlobalInterrupt
+                0x00000b5c        0x8 ./MCAL/GIE/GIE_prg.o
+                0x00000b5c                MGIE_vEnableGlobalInterrupt
+ .text.MGIE_vDisableGlobalInterrupt
+                0x00000b64        0x8 ./MCAL/GIE/GIE_prg.o
+                0x00000b64                MGIE_vDisableGlobalInterrupt
+ .text.MEXTI_vInit
+                0x00000b6c       0x14 ./MCAL/EXTI/EXTI_prg.o
+                0x00000b6c                MEXTI_vInit
+ .text.MDIO_vSetPinDir
+                0x00000b80       0xe6 ./MCAL/DIO/DIO_prg.o
+                0x00000b80                MDIO_vSetPinDir
+ .text.MDIO_vSetPinVal
+                0x00000c66       0xe6 ./MCAL/DIO/DIO_prg.o
+                0x00000c66                MDIO_vSetPinVal
+ .text.MDIO_u8GetPinVal
+                0x00000d4c       0x64 ./MCAL/DIO/DIO_prg.o
+                0x00000d4c                MDIO_u8GetPinVal
+ .text.MDIO_vSetPortDir
+                0x00000db0       0x22 ./MCAL/DIO/DIO_prg.o
+                0x00000db0                MDIO_vSetPortDir
+ .text.MDIO_vSetPortVal
+                0x00000dd2       0x22 ./MCAL/DIO/DIO_prg.o
+                0x00000dd2                MDIO_vSetPortVal
+ .text.MDIO_u8GetPortVal
+                0x00000df4       0x24 ./MCAL/DIO/DIO_prg.o
+                0x00000df4                MDIO_u8GetPortVal
+ .text.MDIO_vTogPinVal
+                0x00000e18       0x6a ./MCAL/DIO/DIO_prg.o
+                0x00000e18                MDIO_vTogPinVal
+ .text.MDIO_vSetLowNibble
+                0x00000e82       0x4c ./MCAL/DIO/DIO_prg.o
+                0x00000e82                MDIO_vSetLowNibble
+ .text.MDIO_vWriteLowNibble
+                0x00000ece       0x4c ./MCAL/DIO/DIO_prg.o
+                0x00000ece                MDIO_vWriteLowNibble
+ .text.MDIO_vSetHighNibble
+                0x00000f1a       0x4e ./MCAL/DIO/DIO_prg.o
+                0x00000f1a                MDIO_vSetHighNibble
+ .text.MDIO_vWriteHighNibble
+                0x00000f68       0x4e ./MCAL/DIO/DIO_prg.o
+                0x00000f68                MDIO_vWriteHighNibble
+ .text.MADC_vInit
+                0x00000fb6       0x16 ./MCAL/ADC/ADC_prg.o
+                0x00000fb6                MADC_vInit
+ .text.MADC_vStartConversion
+                0x00000fcc        0xe ./MCAL/ADC/ADC_prg.o
+                0x00000fcc                MADC_vStartConversion
+ .text.MADC_u16GetADCData
+                0x00000fda        0x8 ./MCAL/ADC/ADC_prg.o
+                0x00000fda                MADC_u16GetADCData
+ .text.MADC_xGetFlagStatus
+                0x00000fe2        0xe ./MCAL/ADC/ADC_prg.o
+                0x00000fe2                MADC_xGetFlagStatus
+ .text.MADC_vRstFlag
+                0x00000ff0        0x8 ./MCAL/ADC/ADC_prg.o
+                0x00000ff0                MADC_vRstFlag
+ .text.MADC_vSetCallback
+                0x00000ff8        0xa ./MCAL/ADC/ADC_prg.o
+                0x00000ff8                MADC_vSetCallback
+ .text.__vector_16
+                0x00001002       0x56 ./MCAL/ADC/ADC_prg.o
+                0x00001002                __vector_16
  .text.SSD_vTurnOff
-                0x0000032a       0x1a ./HAL/SSD/SSD_prg.o
-                0x0000032a                SSD_vTurnOff
+                0x00001058       0x1a ./HAL/SSD/SSD_prg.o
+                0x00001058                SSD_vTurnOff
  .text.SSD_vDisplayNum
-                0x00000344       0x34 ./HAL/SSD/SSD_prg.o
-                0x00000344                SSD_vDisplayNum
+                0x00001072       0x34 ./HAL/SSD/SSD_prg.o
+                0x00001072                SSD_vDisplayNum
  .text.SSD_vInit
-                0x00000378       0x1c ./HAL/SSD/SSD_prg.o
-                0x00000378                SSD_vInit
- .text.HLCD_vSaveCustomChar
-                0x00000394        0x2 ./HAL/LCD/LCD_prg.o
-                0x00000394                HLCD_vSaveCustomChar
- .text.HLCD_vDisplayCustomChar
-                0x00000396        0x2 ./HAL/LCD/LCD_prg.o
-                0x00000396                HLCD_vDisplayCustomChar
- .text.HLCD_vSendChar
-                0x00000398       0x4c ./HAL/LCD/LCD_prg.o
-                0x00000398                HLCD_vSendChar
- .text.HLCD_vPrintNumber
-                0x000003e4       0xe6 ./HAL/LCD/LCD_prg.o
-                0x000003e4                HLCD_vPrintNumber
+                0x000010a6       0x1c ./HAL/SSD/SSD_prg.o
+                0x000010a6                SSD_vInit
+ .text.HLCD_vFallingEdge
+                0x000010c2       0x2e ./HAL/LCD/LCD_prg.o
+                0x000010c2                HLCD_vFallingEdge
  .text.HLCD_vSendCommand
-                0x000004ca       0x4c ./HAL/LCD/LCD_prg.o
-                0x000004ca                HLCD_vSendCommand
+                0x000010f0       0x28 ./HAL/LCD/LCD_prg.o
+                0x000010f0                HLCD_vSendCommand
  .text.HLCD_vSetCursorPosition
-                0x00000516       0x14 ./HAL/LCD/LCD_prg.o
-                0x00000516                HLCD_vSetCursorPosition
- .text.HLCD_vPrintString
-                0x0000052a       0xbc ./HAL/LCD/LCD_prg.o
-                0x0000052a                HLCD_vPrintString
+                0x00001118       0x14 ./HAL/LCD/LCD_prg.o
+                0x00001118                HLCD_vSetCursorPosition
+ .text.HLCD_vShiftCursor_Right
+                0x0000112c        0x8 ./HAL/LCD/LCD_prg.o
+                0x0000112c                HLCD_vShiftCursor_Right
+ .text.HLCD_vShiftCursor_Left
+                0x00001134        0x8 ./HAL/LCD/LCD_prg.o
+                0x00001134                HLCD_vShiftCursor_Left
  .text.HLCD_vClrScreen
-                0x000005e6        0x8 ./HAL/LCD/LCD_prg.o
-                0x000005e6                HLCD_vClrScreen
+                0x0000113c        0x8 ./HAL/LCD/LCD_prg.o
+                0x0000113c                HLCD_vClrScreen
+ .text.HLCD_vSendChar
+                0x00001144       0x5a ./HAL/LCD/LCD_prg.o
+                0x00001144                HLCD_vSendChar
+ .text.HLCD_vDisplayCustomChar
+                0x0000119e        0xa ./HAL/LCD/LCD_prg.o
+                0x0000119e                HLCD_vDisplayCustomChar
+ .text.HLCD_vSaveCustomChar
+                0x000011a8       0x3e ./HAL/LCD/LCD_prg.o
+                0x000011a8                HLCD_vSaveCustomChar
+ .text.HLCD_vPrintNumber
+                0x000011e6       0xf0 ./HAL/LCD/LCD_prg.o
+                0x000011e6                HLCD_vPrintNumber
+ .text.HLCD_vPrintString
+                0x000012d6       0x1a ./HAL/LCD/LCD_prg.o
+                0x000012d6                HLCD_vPrintString
  .text.HLCD_vInit
-                0x000005ee       0x78 ./HAL/LCD/LCD_prg.o
-                0x000005ee                HLCD_vInit
+                0x000012f0       0x66 ./HAL/LCD/LCD_prg.o
+                0x000012f0                HLCD_vInit
  .text.KPD_u8GetPressedKey
-                0x00000666       0xda ./HAL/KPD/KPD_prg.o
-                0x00000666                KPD_u8GetPressedKey
+                0x00001356       0xda ./HAL/KPD/KPD_prg.o
+                0x00001356                KPD_u8GetPressedKey
  .text.KPD_vInit
-                0x00000740       0x12 ./HAL/KPD/KPD_prg.o
-                0x00000740                KPD_vInit
- .text.main     0x00000752        0x2 ./APP/main.o
-                0x00000752                main
- .text.libgcc   0x00000754       0x36 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_divmodsi4.o)
-                0x00000754                __divmodsi4
- .text.libgcc   0x0000078a        0x0 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
- .text.libgcc   0x0000078a        0x0 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_copy_data.o)
- .text.libgcc   0x0000078a        0x0 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
- .text.libgcc   0x0000078a       0x44 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_udivmodsi4.o)
-                0x0000078a                __udivmodsi4
-                0x000007ce                . = ALIGN (0x2)
+                0x00001430       0x12 ./HAL/KPD/KPD_prg.o
+                0x00001430                KPD_vInit
+ .text.main     0x00001442        0x2 ./APP/main.o
+                0x00001442                main
+ .text.libgcc   0x00001444       0x36 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_divmodsi4.o)
+                0x00001444                __divmodsi4
+ .text.libgcc   0x0000147a        0x0 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .text.libgcc   0x0000147a        0x0 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_copy_data.o)
+ .text.libgcc   0x0000147a        0x0 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
+ .text.libgcc   0x0000147a       0x44 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_udivmodsi4.o)
+                0x0000147a                __udivmodsi4
+                0x000014be                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x000007ce        0x0 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
-                0x000007ce                exit
-                0x000007ce                _exit
+ .fini9         0x000014be        0x0 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+                0x000014be                exit
+                0x000014be                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -305,15 +480,21 @@ LOAD c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x000007ce        0x4 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .fini0         0x000014be        0x4 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
  *(.fini0)
-                0x000007d2                _etext = .
+                0x000014c2                _etext = .
 
-.data           0x00800060       0x1a load address 0x000007d2
+.data           0x00800060       0x1c load address 0x000014c2
                 0x00800060                PROVIDE (__data_start, .)
  *(.data)
  .data          0x00800060        0x0 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm32.o
+ .data          0x00800060        0x0 ./MCAL/WDT/WDT_prg.o
+ .data          0x00800060        0x0 ./MCAL/UART/UART_prg.o
+ .data          0x00800060        0x0 ./MCAL/TIMERS/TIMER_prg.o
+ .data          0x00800060        0x0 ./MCAL/GIE/GIE_prg.o
+ .data          0x00800060        0x0 ./MCAL/EXTI/EXTI_prg.o
  .data          0x00800060        0x0 ./MCAL/DIO/DIO_prg.o
+ .data          0x00800060        0x0 ./MCAL/ADC/ADC_prg.o
  .data          0x00800060        0x0 ./HAL/SSD/SSD_prg.o
  .data          0x00800060        0x0 ./HAL/LCD/LCD_prg.o
  .data          0x00800060        0x0 ./HAL/KPD/KPD_prg.o
@@ -324,45 +505,96 @@ LOAD c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
  .data          0x00800060        0x0 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
  .data          0x00800060        0x0 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_udivmodsi4.o)
  *(.data*)
+ .data.xAdcFlag
+                0x00800060        0x1 ./MCAL/ADC/ADC_prg.o
+                0x00800060                xAdcFlag
  *(.rodata)
  *(.rodata*)
  .rodata.CGS_u8SSD_Nums
-                0x00800060        0xa ./HAL/SSD/SSD_prg.o
- .rodata.C.0.1289
-                0x0080006a       0x10 ./HAL/KPD/KPD_prg.o
+                0x00800061        0xa ./HAL/SSD/SSD_prg.o
+ .rodata.C.0.1304
+                0x0080006b       0x10 ./HAL/KPD/KPD_prg.o
  *(.gnu.linkonce.d*)
-                0x0080007a                . = ALIGN (0x2)
-                0x0080007a                _edata = .
-                0x0080007a                PROVIDE (__data_end, .)
+                0x0080007c                . = ALIGN (0x2)
+ *fill*         0x0080007b        0x1 00
+                0x0080007c                _edata = .
+                0x0080007c                PROVIDE (__data_end, .)
 
-.bss            0x0080007a        0x1
-                0x0080007a                PROVIDE (__bss_start, .)
+.bss            0x0080007c       0x44
+                0x0080007c                PROVIDE (__bss_start, .)
  *(.bss)
- .bss           0x0080007a        0x0 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm32.o
- .bss           0x0080007a        0x0 ./MCAL/DIO/DIO_prg.o
- .bss           0x0080007a        0x0 ./HAL/SSD/SSD_prg.o
- .bss           0x0080007a        0x0 ./HAL/LCD/LCD_prg.o
- .bss           0x0080007a        0x0 ./HAL/KPD/KPD_prg.o
- .bss           0x0080007a        0x0 ./APP/main.o
- .bss           0x0080007a        0x0 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_divmodsi4.o)
- .bss           0x0080007a        0x0 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
- .bss           0x0080007a        0x0 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_copy_data.o)
- .bss           0x0080007a        0x0 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
- .bss           0x0080007a        0x0 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_udivmodsi4.o)
+ .bss           0x0080007c        0x0 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm32.o
+ .bss           0x0080007c        0x0 ./MCAL/WDT/WDT_prg.o
+ .bss           0x0080007c        0x0 ./MCAL/UART/UART_prg.o
+ .bss           0x0080007c        0x0 ./MCAL/TIMERS/TIMER_prg.o
+ .bss           0x0080007c        0x0 ./MCAL/GIE/GIE_prg.o
+ .bss           0x0080007c        0x0 ./MCAL/EXTI/EXTI_prg.o
+ .bss           0x0080007c        0x0 ./MCAL/DIO/DIO_prg.o
+ .bss           0x0080007c        0x0 ./MCAL/ADC/ADC_prg.o
+ .bss           0x0080007c        0x0 ./HAL/SSD/SSD_prg.o
+ .bss           0x0080007c        0x0 ./HAL/LCD/LCD_prg.o
+ .bss           0x0080007c        0x0 ./HAL/KPD/KPD_prg.o
+ .bss           0x0080007c        0x0 ./APP/main.o
+ .bss           0x0080007c        0x0 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_divmodsi4.o)
+ .bss           0x0080007c        0x0 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .bss           0x0080007c        0x0 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_copy_data.o)
+ .bss           0x0080007c        0x0 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
+ .bss           0x0080007c        0x0 c:/imt_sdk_win_64/winavr/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_udivmodsi4.o)
  *(.bss*)
- .bss.L_su8Row.1298
-                0x0080007a        0x1 ./HAL/LCD/LCD_prg.o
+ .bss.GS_fpUART_RXC_Callback
+                0x0080007c        0x2 ./MCAL/UART/UART_prg.o
+ .bss.GS_fpUART_TXC_Callback
+                0x0080007e        0x2 ./MCAL/UART/UART_prg.o
+ .bss.GS_fpUART_UDRE_Callback
+                0x00800080        0x2 ./MCAL/UART/UART_prg.o
+ .bss.LS_u32Counter.1582
+                0x00800082        0x4 ./MCAL/TIMERS/TIMER_prg.o
+ .bss.LS_u32Counter.1572
+                0x00800086        0x4 ./MCAL/TIMERS/TIMER_prg.o
+ .bss.LS_u32Counter.1562
+                0x0080008a        0x4 ./MCAL/TIMERS/TIMER_prg.o
+ .bss.LS_u32Counter.1552
+                0x0080008e        0x4 ./MCAL/TIMERS/TIMER_prg.o
+ .bss.LS_u32Counter.1542
+                0x00800092        0x4 ./MCAL/TIMERS/TIMER_prg.o
+ .bss.LS_u32Counter.1526
+                0x00800096        0x4 ./MCAL/TIMERS/TIMER_prg.o
+ .bss.LS_u32Counter.1516
+                0x0080009a        0x4 ./MCAL/TIMERS/TIMER_prg.o
+ .bss.GS_fpTIM0_OVF_Callback
+                0x0080009e        0x2 ./MCAL/TIMERS/TIMER_prg.o
+ .bss.GS_fpTIM0_CTC_Callback
+                0x008000a0        0x2 ./MCAL/TIMERS/TIMER_prg.o
+ .bss.GS_fpTIM2_OVF_Callback
+                0x008000a2        0x2 ./MCAL/TIMERS/TIMER_prg.o
+ .bss.GS_fpTIM2_CTC_Callback
+                0x008000a4        0x2 ./MCAL/TIMERS/TIMER_prg.o
+ .bss.GS_fpTIM1_OVF_Callback
+                0x008000a6        0x2 ./MCAL/TIMERS/TIMER_prg.o
+ .bss.GS_fpTIM1_CTC_A_Callback
+                0x008000a8        0x2 ./MCAL/TIMERS/TIMER_prg.o
+ .bss.GS_fpTIM1_CTC_B_Callback
+                0x008000aa        0x2 ./MCAL/TIMERS/TIMER_prg.o
+ .bss.GS_fpTIM1_ICU_Callback
+                0x008000ac        0x2 ./MCAL/TIMERS/TIMER_prg.o
  *(COMMON)
-                0x0080007b                PROVIDE (__bss_end, .)
-                0x000007d2                __data_load_start = LOADADDR (.data)
-                0x000007ec                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x008000ae       0x10 ./MCAL/TIMERS/TIMER_prg.o
+                0x008000ae                G_u32IntervalCountTIM1B
+                0x008000b2                G_u32IntervalCountTIM2
+                0x008000b6                G_u32IntervalCountTIM0
+                0x008000ba                G_u32IntervalCountTIM1A
+ COMMON         0x008000be        0x2 ./MCAL/ADC/ADC_prg.o
+                0x008000be                G_fpADC_Callback
+                0x008000c0                PROVIDE (__bss_end, .)
+                0x000014c2                __data_load_start = LOADADDR (.data)
+                0x000014de                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x0080007b        0x0
-                0x0080007b                PROVIDE (__noinit_start, .)
+.noinit         0x008000c0        0x0
+                0x008000c0                PROVIDE (__noinit_start, .)
  *(.noinit*)
-                0x0080007b                PROVIDE (__noinit_end, .)
-                0x0080007b                _end = .
-                0x0080007b                PROVIDE (__heap_start, .)
+                0x008000c0                PROVIDE (__noinit_end, .)
+                0x008000c0                _end = .
+                0x008000c0                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
  *(.eeprom*)

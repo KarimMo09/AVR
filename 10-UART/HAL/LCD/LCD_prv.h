@@ -10,6 +10,9 @@
 
 #define EIGHT_BITS 			 0x38
 #define FOUR_BITS 			 0x28
+#define SHIFT_CURSOR_LEFT    0x10
+#define SHIFT_CURSOR_RIGHT   0x14
+#define DEL					 0x08
 #define CLR_SCREEN           0x01
 #define CURSOR_ON_DISPLAN_ON 0x0e
 #define RETURN_HOME          0x02

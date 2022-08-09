@@ -34,6 +34,8 @@ void HLCD_vClrScreen(void);
 void HLCD_vPrintString(char *A_pu8String );
 void HLCD_vPrintNumber(s32 A_s32Number);
 void HLCD_vSetCursorPosition(u8 A_u8LinePos, u8 A_u8LineNo);
+void HLCD_vShiftCursor_Left(void);
+void HLCD_vShiftCursor_Right(void);
 void HLCD_vSaveCustomChar(u8 A_u8CgramIndex,u8 A_u8CustomCharData[] );
 void HLCD_vDisplayCustomChar(u8 A_u8CgramIndex);
 
