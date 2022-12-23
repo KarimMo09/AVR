@@ -12,9 +12,17 @@
 #include "UART_prv.h"
 #include "UART_cfg.h"
 #include <util\delay.h>
-static void (*GS_fpUART_RXC_Callback)(u8);
-static void (*GS_fpUART_TXC_Callback)(void);
-static u8 (*GS_fpUART_UDRE_Callback)(void)=NULL;
+//static void (*GS_fpUART_RXC_Callback)(u8)=NULL;
+static void (*GS_fpUART_RXC_Callback)(void)=NULL;
+static void (*GS_fpUART_TXC_Callback)(void)=NULL;
+static u8   (*GS_fpUART_UDRE_Callback)(void)=NULL;
+static char    *GS_pu8InternalTxBuffer;
+static u16    GS_u16TxBufferCounter;
+static u16    GS_u16TxBufferSize=0;
+static char    *GS_pu8InternalRxBuffer;
+static u16    GS_u16RxBufferCounter;
+static u16    GS_u16RxBufferSize=0;
+static u8     GS_u8RxFlag=UART_RX_NOT_Available;
 
 
 void MUART_vInit(void)
@@ -155,7 +163,7 @@ void MUART_vSendNumber(s32 A_s32Number)
 		}
 }
 
-void MUART_vEnableIntterupts(u8 A_u8Interrupt_type)
+void MUART_vEnableIntterupt(u8 A_u8Interrupt_type)
 {
 	switch(A_u8Interrupt_type)
 		{
@@ -168,7 +176,7 @@ void MUART_vEnableIntterupts(u8 A_u8Interrupt_type)
 		}
 
 }
-void MUART_DisableIntterupts(u8 A_u8Interrupt_type)
+void MUART_vDisableIntterupt(u8 A_u8Interrupt_type)
 {
 
 	switch(A_u8Interrupt_type)
@@ -180,7 +188,7 @@ void MUART_DisableIntterupts(u8 A_u8Interrupt_type)
 				case UDR_EMPTY:CLR_BIT(UCSRB,UDRIE);
 							 break;
 			}
-}
+}/*
 void MUART_vRX_SetCallback(void (* A_fptr)(u8) )
 {
 	GS_fpUART_RXC_Callback=A_fptr;
@@ -197,25 +205,76 @@ void MUART_vTX_SetCallback(void (* A_fptr)(void) )
 
 	GS_fpUART_TXC_Callback=A_fptr;
 }
+*/
+
+void MUART_vTransmit_Asynch(char A_xstr[], u16 A_u16Size,void (* A_fptr)(void))
+{
+
+	MUART_vEnableIntterupt(TX_COPMLETE);
+	GS_fpUART_TXC_Callback=A_fptr;
+	GS_pu8InternalTxBuffer=A_xstr;
+	GS_u16TxBufferSize=A_u16Size;
+	GS_u16RxBufferCounter=0;
+	UDR=A_xstr[0];
+
+	//GS_u16TxBufferCounter++;
+
+
+
+}
+void MUART_vReceive_Asynch(char A_xBuffer[], u16 A_u16Size,void (* A_fptr)(void))
+{
+	GS_fpUART_RXC_Callback=A_fptr;
+	GS_pu8InternalRxBuffer=A_xBuffer;
+	GS_u16RxBufferSize=A_u16Size;
+}
+u8 MUART_u8IsAvailable(void)
+{
+	return GS_u8RxFlag;
+}
 
 /*---------------ISR Receiver Complete---------------*/
-void __vector_13(void) __attribute__((signal));
+/*void __vector_13(void) __attribute__((signal));
 void __vector_13(void)
 {
 	if (GS_fpUART_RXC_Callback != NULL)
 		{
 			GS_fpUART_RXC_Callback(UDR);
+
 		}
-}
-/*---------------ISR Transmitter Complete---------------*/
-void __vector_15(void) __attribute__((signal));
-void __vector_15(void)
+}*/
+
+void __vector_13(void) __attribute__((signal));
+void __vector_13(void)
 {
-	if (GS_fpUART_TXC_Callback != NULL)
+	if (GS_fpUART_RXC_Callback != NULL)
 		{
-		    GS_fpUART_TXC_Callback();
+			GS_fpUART_RXC_Callback();
+
 		}
+	if(GS_u16RxBufferCounter < GS_u16RxBufferSize)
+		{
+		if(GS_pu8InternalRxBuffer[GS_u16RxBufferCounter]!='\n' ||
+		 GS_pu8InternalRxBuffer[GS_u16RxBufferCounter]!='\r' ||
+		  GS_pu8InternalRxBuffer[GS_u16RxBufferCounter]!='\0')
+		{
+		    GS_pu8InternalRxBuffer[GS_u16RxBufferCounter]=UDR;
+			GS_u16RxBufferCounter++;
+		}
+		else
+		{
+			GS_pu8InternalRxBuffer[GS_u16RxBufferCounter]='\0';
+
+		}
+
+		}
+	else
+	{
+		GS_u16RxBufferCounter=0;
+	}
+
 }
+
 /*---------------ISR UDR Empty--------------*/
 void __vector_14(void) __attribute__((signal));
 void __vector_14(void)
@@ -225,3 +284,32 @@ void __vector_14(void)
 		   UDR=GS_fpUART_UDRE_Callback();
 		}
 }
+
+/*---------------ISR Transmitter Complete---------------*/
+void __vector_15(void) __attribute__((signal));
+void __vector_15(void)
+{
+	if (GS_fpUART_TXC_Callback != NULL)
+		{
+		    GS_fpUART_TXC_Callback();
+		}
+	if(GS_u16TxBufferCounter < GS_u16TxBufferSize)
+	{
+		if(GS_pu8InternalTxBuffer[GS_u16TxBufferCounter] !='\0' )
+		{
+			GS_u16TxBufferCounter++;
+			UDR=GS_pu8InternalTxBuffer[GS_u16TxBufferCounter];
+
+		}
+		else
+		{
+			MUART_vDisableIntterupt(TX_COPMLETE);
+		}
+	}
+	else
+	{
+		GS_u16TxBufferCounter=0;
+
+	}
+}
+

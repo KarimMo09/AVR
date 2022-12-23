@@ -11,34 +11,30 @@
 #include "../MCAL/DIO/DIO_int.h"
 #include "../MCAL/UART/UART_int.h"
 #include "../MCAL/GIE/GIE_int.h"
-#include "../HAL/LCD/LCD_int.h"
 #include <util/delay.h>
-char *x="This string was sent via UART";
+char x[10]="Karim ";
 
-void ISR_RX(u8 A_u8Data)
+void ISR_UDRE(void)
 {
-
-}
-
-u8 ISR_UDRE(void)
-{
+	/*_delay_ms(200);
 	if(*x=='\0')
 	{
 		MUART_DisableIntterupts(UDR_EMPTY);
-	}
-	return *x++;
+	}*/
+
 }
 
 int main(void)
 {
 	_delay_ms(15);
-	//HLCD_vInit();
-	MUART_vUDRE_SetCallback(ISR_UDRE);
-	MUART_vInit();
+	//MUART_vUDRE_SetCallback(ISR_UDRE);
+
 	MGIE_vEnableGlobalInterrupt();
+	MUART_vInit();
+
 	while(1)
 	{
-
+		MUART_vTransmit_Asynch(x,10,ISR_UDRE);
 	}
 }
 

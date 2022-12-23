@@ -10,7 +10,7 @@
 
 /*--------------------TIMER0 Configuration-------------------*/
 
-#define TIMER0_ENABLE       ENABLE
+#define TIMER0_ENABLE       DISABLE
 
 /* Options
  * TIMER_OVF
